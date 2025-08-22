@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Form Designer</title>
+  <link rel="stylesheet" href="form_designer_panel.css">
+</head>
+<body>
+  <div class="app">
+
+    <!-- TOOLBOX (left) -->
+    <aside class="panel toolbox">
+      <div class="panel-head">
+        <h3>Toolbox</h3>
+        <div class="muted">Drag items to the canvas</div>
+      </div>
+
+      <div class="tools" id="toolList">
+        <div class="tool" draggable="true" data-type="heading" title="Heading"><div class="ico">H</div><div class="lbl">Heading</div></div>
+        <div class="tool" draggable="true" data-type="text" title="Text Input"><div class="ico">T</div><div class="lbl">Text</div></div>
+        <div class="tool" draggable="true" data-type="textarea" title="Textarea"><div class="ico">✎</div><div class="lbl">Textarea</div></div>
+        <div class="tool" draggable="true" data-type="email" title="Email"><div class="ico">✉</div><div class="lbl">Email</div></div>
+        <div class="tool" draggable="true" data-type="password" title="Password"><div class="ico">🔒</div><div class="lbl">Password</div></div>
+        <div class="tool" draggable="true" data-type="number" title="Number"><div class="ico">#</div><div class="lbl">Number</div></div>
+        <div class="tool" draggable="true" data-type="date" title="Date"><div class="ico">📅</div><div class="lbl">Date</div></div>
+        <div class="tool" draggable="true" data-type="select" title="Dropdown"><div class="ico">▾</div><div class="lbl">Dropdown</div></div>
+        <div class="tool" draggable="true" data-type="checkbox" title="Checkbox"><div class="ico">☑</div><div class="lbl">Checkbox</div></div>
+        <div class="tool" draggable="true" data-type="radio" title="Radio"><div class="ico">◉</div><div class="lbl">Radio</div></div>
+        <div class="tool" draggable="true" data-type="file" title="File"><div class="ico">📁</div><div class="lbl">File</div></div>
+        <div class="tool" draggable="true" data-type="color" title="Color"><div class="ico">🎨</div><div class="lbl">Color</div></div>
+        <div class="tool" draggable="true" data-type="range" title="Range"><div class="ico">↔</div><div class="lbl">Range</div></div>
+        <div class="tool" draggable="true" data-type="button" title="Button"><div class="ico">●</div><div class="lbl">Button</div></div>
+        <div class="tool" draggable="true" data-type="image" title="Image"><div class="ico">🖼</div><div class="lbl">Image</div></div>
+      </div>
+
+      <div class="panel-foot">
+        <button id="exportJson" class="btn">Export JSON</button>
+        <button id="importJson" class="btn ghost" id="importBtn">Import JSON</button>
+        <input id="importFileInput" type="file" accept="application/json" style="display:none;">
+      </div>
+    </aside>
+
+    <!-- CANVAS (center) -->
+    <main class="panel canvas-panel">
+      <div class="canvas-head">
+        <div>
+          <h2>Live Preview</h2>
+          <div class="muted">Drag controls from toolbox — click a control to edit</div>
+        </div>
+
+        <div class="canvas-controls">
+          <label class="small">Mode
+            <select id="layoutMode"><option value="flow">Flow</option><option value="free">Free</option></select>
+          </label>
+          <label class="small">Columns
+            <select id="columns"><option>1</option><option>2</option><option>3</option></select>
+          </label>
+          <label class="small">Grid <input id="gridToggle" type="checkbox"></label>
+          <label class="small">Snap <input id="snapToggle" type="checkbox" checked></label>
+        </div>
+      </div>
+
+      <div id="canvas" class="canvas">
+        <div id="grid" class="grid-overlay" aria-hidden="true"></div>
+        <div id="formRoot" class="form-root">
+          <div class="empty-state">Drop elements here — this is your form canvas.</div>
+        </div>
+      </div>
+
+      <div class="canvas-foot">
+        <div class="muted">Tip: double-click a field label to edit inline. Press ESC to deselect.</div>
+      </div>
+    </main>
+
+    <!-- SETTINGS (right) -->
+    <aside class="panel settings-panel">
+      <div class="panel-head">
+        <h3>Settings</h3>
+        <div class="muted" id="selectedInfo">No element selected</div>
+      </div>
+
+      <!-- Collapsible: Global -->
+      <div class="settings-block">
+        <button class="collapse-toggle" data-target="globalSettings">Form (Global) ▾</button>
+        <div id="globalSettings" class="collapse-body">
+          <label>Background Color
+            <input type="color" id="formBgColor" value="#ffffff">
+          </label>
+          <label>Background Image
+            <input type="file" id="formBgImage" accept="image/*">
+          </label>
+          <label>Form Width (px)
+            <input type="number" id="formWidth" min="200" value="900">
+          </label>
+          <label>Form Padding (px)
+            <input type="number" id="formPadding" min="0" value="16">
+          </label>
+          <label>Grid Size (px)
+            <input type="number" id="gridSize" min="4" value="12">
+          </label>
+          <button id="clearCanvas" class="btn ghost full">Clear Canvas</button>
+        </div>
+      </div>
+
+      <!-- Collapsible: Element -->
+      <div class="settings-block">
+        <button class="collapse-toggle" data-target="elementSettings">Element ▾</button>
+        <div id="elementSettings" class="collapse-body" style="display:none;">
+          <label>Label Text
+            <input type="text" id="elLabel">
+          </label>
+          <label>Placeholder / Text
+            <input type="text" id="elPlaceholder">
+          </label>
+          <label class="inline"><input type="checkbox" id="elRequired"> Required</label>
+
+          <div class="two-cols">
+            <label>Width (%) <input type="number" id="elWidth" min="10" max="100" value="100"></label>
+            <label>Height (px) <input type="number" id="elHeight" min="0" value="0"></label>
+          </div>
+
+          <label>Font Family
+            <select id="elFont"><option>Arial</option><option>Poppins</option><option>Roboto</option><option>Georgia</option></select>
+          </label>
+
+          <div class="two-cols">
+            <label>Font Size <input type="number" id="elFontSize" min="8" max="48" value="14"></label>
+            <label>Label Size <input type="number" id="elLabelSize" min="8" max="36" value="14"></label>
+          </div>
+
+          <div class="two-cols">
+            <label>Text Color <input type="color" id="elTextColor" value="#111111"></label>
+            <label>Background <input type="color" id="elBgColor" value="#ffffff"></label>
+          </div>
+
+          <div class="two-cols">
+            <label>Border Color <input type="color" id="elBorderColor" value="#cccccc"></label>
+            <label>Border Radius <input type="range" id="elRadius" min="0" max="30" value="6"></label>
+          </div>
+
+          <label>Padding (px)
+            <input type="number" id="elPadding" min="0" value="8">
+          </label>
+
+          <div id="optionsEditor" style="display:none;">
+            <h5>Options (select/radio/checkbox)</h5>
+            <div id="optionsList"></div>
+            <div class="two-cols">
+              <input id="newOptionText" placeholder="Option text">
+              <button id="addOptionBtn" class="btn">Add</button>
+            </div>
+          </div>
+
+          <div class="action-row">
+            <button id="deleteElement" class="btn danger">Delete</button>
+            <button id="bringFront" class="btn ghost">Bring Front</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-foot">
+        <button id="saveLayout" class="btn full">Save Layout (to VBA)</button>
+        <div class="muted small" style="margin-top:8px;">Also possible: Export JSON</div>
+      </div>
+    </aside>
+
+  </div>
+  <script src="bindingManager.js"></script>
+  <script src="form_designer_panel.js"></script>
+</body>
+</html>

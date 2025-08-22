@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+           xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+           xsi:type="TaskPaneApp">
+
+  <Id>12345678-90ab-cdef-1234-567890abcdef</Id> <!-- generate your own GUID -->
+  <Version>1.0.0.0</Version>
+  <ProviderName>Your Company</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="Excel Form Builder"/>
+  <Description DefaultValue="Design and bind custom forms directly in Excel"/>
+  <IconUrl DefaultValue="https://localhost:3000/assets/icon32.png"/>
+  <SupportUrl DefaultValue="https://localhost:3000/support"/>
+
+  <Hosts>
+    <Host Name="Workbook"/>
+  </Hosts>
+
+  <DefaultSettings>
+    <!-- Use your designer HTML -->
+    <SourceLocation DefaultValue="https://localhost:3000/form_designer_panel.html"/>
+  </DefaultSettings>
+
+  <Permissions>ReadWriteDocument</Permissions>
+
+  <VersionOverrides xsi:type="ov:VersionOverridesV1_0">
+    <ov:Hosts>
+      <ov:Host xsi:type="Workbook">
+        <ov:DesktopFormFactor>
+
+          <!-- Ribbon Definition -->
+          <ov:ExtensionPoint xsi:type="PrimaryCommandSurface">
+            <ov:CustomTab id="tabFormBuilder">
+              <ov:Label resid="tabLabel"/>
+              <ov:Group id="grpMain" label="Designer">
+                <ov:Control xsi:type="Button" id="btnLaunchDesigner">
+                  <ov:Label resid="btnLaunchDesignerLabel"/>
+                  <ov:Supertip>
+                    <ov:Title resid="btnLaunchDesignerLabel"/>
+                    <ov:Description resid="btnLaunchDesignerDesc"/>
+                  </ov:Supertip>
+                  <ov:Icon>
+                    <ov:bt:Image size="16" resid="icon16"/>
+                    <ov:bt:Image size="32" resid="icon32"/>
+                    <ov:bt:Image size="80" resid="icon80"/>
+                  </ov:Icon>
+                  <ov:Action xsi:type="ShowTaskpane">
+                    <ov:SourceLocation resid="taskpaneUrl"/>
+                  </ov:Action>
+                </ov:Control>
+              </ov:Group>
+            </ov:CustomTab>
+          </ov:ExtensionPoint>
+
+        </ov:DesktopFormFactor>
+      </ov:Host>
+    </ov:Hosts>
+
+    <!-- Resources (labels, icons, URLs) -->
+    <ov:Resources>
+      <ov:bt:Images>
+        <ov:bt:Image id="icon16" DefaultValue="https://localhost:3000/assets/icon16.png"/>
+        <ov:bt:Image id="icon32" DefaultValue="https://localhost:3000/assets/icon32.png"/>
+        <ov:bt:Image id="icon80" DefaultValue="https://localhost:3000/assets/icon80.png"/>
+      </ov:bt:Images>
+
+      <ov:bt:Urls>
+        <ov:bt:Url id="taskpaneUrl" DefaultValue="https://localhost:3000/form_designer_panel.html"/>
+      </ov:bt:Urls>
+
+      <ov:bt:ShortStrings>
+        <ov:bt:String id="tabLabel" DefaultValue="Form Builder"/>
+        <ov:bt:String id="btnLaunchDesignerLabel" DefaultValue="Form Designer"/>
+      </ov:bt:ShortStrings>
+
+      <ov:bt:LongStrings>
+        <ov:bt:String id="btnLaunchDesignerDesc" DefaultValue="Launch the Form Designer taskpane to build and bind forms."/>
+      </ov:bt:LongStrings>
+    </ov:Resources>
+  </VersionOverrides>
+</OfficeApp>
